@@ -20,8 +20,7 @@
 		<property name="ignoreResourceNotFound" value="true"/>
 	</bean>
 	
-	
-	
+
 	<!-- 
 		Server Camel Context (running inside ActiveMQ) 
 	-->
