@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:camel="http://camel.apache.org/schema/spring"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+                            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+
+	<!-- Load properties to Spring Context -->
+	<bean id="serverProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="systemPropertiesModeName" value="SYSTEM_PROPERTIES_MODE_OVERRIDE"/>		
+		<property name="placeholderPrefix" value="${applicationProperties."/>
+		<property name="locations">
+	    	<list>
+	    		<value>classpath:/application.properties</value>
+	    	</list>
+	    </property>
+		<property name="ignoreResourceNotFound" value="true"/>
+	</bean>
+	
+	
+	
+	<!-- 
+		Server Camel Context (running inside ActiveMQ) 
+	-->
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+	
+		<!-- Load properties to Camel Context -->
+		<propertyPlaceholder id="properties" location="application.properties" />
+	
+		<!-- Camel Broadcast Message Route -->
+		<route id="processIncomingFilesRoute" trace="true" xmlns="http://camel.apache.org/schema/spring">
+
+			<!-- Listen on this Queue for incoming Messages -->
+			<from uri="activemq://queue:{{broker.queue}}" />
+
+			<!-- Log to console -->
+			<log message="Incoming Message - distribute via Cometd" loggingLevel="INFO" />
+
+			<!-- 
+				Creates a Cometd channel endpoint
+				Broadcast to all Cometd registered subscribers 
+			-->
+			<to uri="{{cometd.channel}}" />
+
+		</route>
+		
+	</camelContext>
+
+
+	<!-- 
+		Server ActiveMQ Broker Configuration 
+	-->
+	<amq:broker id="broker" useJmx="true" persistent="false">
+		<amq:transportConnectors>
+			<amq:transportConnector uri="${applicationProperties.broker.url}" />
+		</amq:transportConnectors>
+	</amq:broker>
+	<bean id="activemq" class="org.apache.camel.component.jms.JmsComponent">
+		<property name="connectionFactory">
+			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
+				<property name="brokerURL" value="vm://localhost?async=false" />
+			</bean>
+		</property>
+	</bean>
+
+</beans>
