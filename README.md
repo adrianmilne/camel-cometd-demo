@@ -1,35 +1,40 @@
-camel-demo-file-and-freemarker
-==============================
+camel-cometd-demo
+=================
 
-Simple example project that demonstrates using Camel to listen for a new file arriving, then extracting metadata from the file and using Freemarker to insert that into a template.
+Simple example project that demonstrates using Apache Camel to receive JMS and then publish the messages to a CometD channel, where they are picked up by a web browser(s).
 
 
-Setup
-=====
+What it does
+============
 
-This demo was initially set up on windows. It can run on any environment - but needs to following config setting up for your system before running (in application-camel-context.xml):
+This single demo project can be used to open 3 windows:
+ - An ActiveMQ\Camel server - with a CometD producer
+ - A web page - consumes messages from the CometD producer when they become available
+ - A java demo app - which will fire JMS messages at the Camel server
 
-c:/data/in/
-c:/data/tmp/
+Running the demo end to end you will see the java app sending messages to ActiveMQ, the Camel route on the ActiveMQ server will pick up the messages and push them to the CometD channel. The web page will pick them up from the CometD channel and display them as they arrive.
 
 
 Running the Demo
 ================
 
-1. Download project
+1. Open a terminal window and navigate to the project root directory ${ProjectHome}.
 
-2. Create directory structure outlined above (to use a different structure - update application-camel-context.xml)
-
-3. In a terminal window - cd to the root directory (where pom.xml is) - type 'mvn camel:run'. This will start up an instance of camel/activemq.
-
-4. Drop a file into 'c:/data/in' directory. What will happen is:
-
-	- File is moved to c:/data/tmp directory
-	- The filename is extracted, and merged into the Freemarker template (which produces XML)
-	- A JMS Object Message is created containing this XML, and placed onto the OutputQueue
+2. Type 'mvn clean install' to check it builds ok
+	- If you have any problems here - check your maven installation is ok
 	
-5. Camel tracing is enabled so you will be able to view all the properties passes around by Camel. 
+3. Type 'mvn camel:run'
+	- This will spin up the ActiveMQ server - on localhost:61616
+	- The ActiveMQ server is running Camel, which has a CometD route configured to publish on channel 'cometd://0.0.0.0:9099/broadcastMessageChannel'
+	- We now need to start up a CometD consumer on this channel....
 
-6. This demo could be extended to add a Queue Listener to pick the message from the queue (see the https://github.com/corsoft/esper-demo-nuclear demo for an example of how to do this).
-
+4. Open the 'comet-test.html' web page in a browser
+	- this is in ${ProjectHome}/src/main/resources/html/comet-test.html
+	- this is now consuming on the CometD channel
+	
+5. Open a second new terminal window and navigate to the project root directory ${ProjectHome}
+	- Type 'mvn exec:java'
+	- This will run a simulation program which will fire JMS messages at the ActiveMQ server
+	- All being well - you should see them flash up on the comet-test.html page!
+	
 
