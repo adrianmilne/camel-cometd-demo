@@ -11,10 +11,10 @@ Prerequisites
 What it does
 ============
 
-This single demo project can be used to open 3 windows:
- - An ActiveMQ\Camel server - with a CometD producer
- - A web page - consumes messages from the CometD producer when they become available
- - A java demo app - which will fire JMS messages at the Camel server
+This single demo project will open 3 windows (2 terminals and a browser):
+ - Terminal window - running an ActiveMQ\Camel server - with a CometD producer
+ - Web page window - consumes messages from the CometD producer when they become available
+ - Terminal window - running Java client app - which will fire JMS messages at the Camel server
 
 Running the demo end to end you will see the java app sending messages to ActiveMQ, the Camel route on the ActiveMQ server will pick up the messages and push them to the CometD channel. The web page will pick them up from the CometD channel and display them as they arrive.
 
@@ -26,7 +26,7 @@ Running the Demo
 
 
 2. Type 'mvn clean install' to check it builds ok
-	- If you have any problems here - check your maven installation is ok
+	- If you have any problems here - check your maven and java installations are ok
 	
 
 3. Type 'mvn camel:run'
