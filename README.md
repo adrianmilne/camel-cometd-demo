@@ -1,3 +1,4 @@
+<a href="https://travis-ci.org/corsoft/camel-cometd-demo"><img src="https://travis-ci.org/corsoft/camel-cometd-demo.svg"/></a>
 camel-cometd-demo
 =================
 
