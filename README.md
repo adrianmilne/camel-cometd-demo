@@ -2,6 +2,8 @@
 camel-cometd-demo
 =================
 
+<img src="http://www.adrianmilne.com/wp-content/uploads/2013/04/feature-image-template-camel.png" />
+
 Simple example project that demonstrates using Apache Camel to receive JMS and then publish the messages to a CometD channel, where they are picked up by a web browser(s).
 
 On the Web
@@ -11,7 +13,7 @@ Featured on DZone Javalobby
  - http://java.dzone.com/articles/cometd-and-camel-enterprise
 
 And on my blog
- - http://corsoftlimited.blogspot.co.uk/2013/04/apache-camel-jms-and-cometd-oh-my.html
+ - http://www.adrianmilne.com/apache-camel-jms-and-cometd-oh-my/
 
 
 Prerequisites
